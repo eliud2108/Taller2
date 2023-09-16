@@ -133,7 +133,7 @@ def calcular_promedio_general():
     promedio_general = sum(promedios) / len(base_de_datos)
     print(f"El promedio general de todos los estudiantes es: {promedio_general:.2f}")
 
-# Función para ver los estudiantes destacados (con los dos mayores promedios)
+# Función para ver los estudiantes destacados  (promedio > 4.0)
 def ver_estudiantes_destacados():
     if not base_de_datos:
         print("No hay estudiantes registrados.")
