@@ -49,7 +49,7 @@ def seleccionar_carrera():
 def registrar_estudiante():
     try:
         nombre = input("Ingrese el nombre del estudiante: ")
-        if not nombre.isalpha or nombre.isspace(): #Permite solo letras y espacios
+        if not nombre.isalpha and nombre.isspace(): #Permite solo letras y espacios
            raise ValueError("El nombre debe contener solo letras.")
         carrera = seleccionar_carrera()
         while True:
