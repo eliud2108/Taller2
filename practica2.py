@@ -1,5 +1,3 @@
-
-
 import pickle
 
 # Función para cargar la base de datos desde un archivo
@@ -30,7 +28,11 @@ base_de_datos = cargar_base_de_datos()
 # Función para seleccionar una carrera
 def seleccionar_carrera():
     print("\nSeleccione la carrera:")
-    carreras = ["Ingeniería en automatización y control", "Ingeniería de sistemas", "Ingeniería industrial", "Ingeniería mecánica"]
+    carreras = ["Ingeniería en automatización y control", 
+                "Ingeniería de sistemas",
+                "Ingeniería industrial",
+                "Ingeniería mecánica\n"]
+    
     for i, carrera in enumerate(carreras, 1):
         print(f"{i}. {carrera}")
     while True:
@@ -43,22 +45,27 @@ def seleccionar_carrera():
         except ValueError:
             print("Por favor, ingrese un valor numérico válido.")
 
-
-
 # Función para registrar un estudiante
 def registrar_estudiante():
+    estudiante = {
+        "nombre": None ,
+        "edad": None,
+        "carrera": None,
+        "promedio": None,
+        "carnet": None 
+    }
     try:
-        nombre = input("Ingrese el nombre del estudiante: ")
+        nombre = input("\nIngrese el nombre del estudiante: ")
         if not nombre.isalpha():
            raise ValueError("El nombre debe contener solo letras.")
         carrera = seleccionar_carrera()
         while True:
             try:
                 edad = int(input("Ingrese la edad del estudiante: "))
-                if edad >= 0:
+                if 100 > edad > 0:
                     break
                 else:
-                    print("La edad debe ser un valor positivo.")
+                    print("Edad no valida.")
             except ValueError:
                 print("Por favor, ingrese un valor numérico válido para la edad.")
         while True:
@@ -70,12 +77,24 @@ def registrar_estudiante():
                     print("El promedio debe estar en el rango de 0.0 a 5.0")
             except ValueError:
                 print("Por favor, ingrese un valor numérico válido.")
+                
+        while True:
+            try:
+                carnet = int(input("Ingrese el número de carnet del estudiante: "))
+                carnet_no_existe = list(filter(lambda estudiante: estudiante["carnet"] == carnet, base_de_datos))
+                if (carnet > 0) and len(carnet_no_existe) == 0:
+                    break
+                else:
+                    print("Número de carnet ya existente.")
+            except ValueError:
+                print("Por favor, ingrese un valor numérico válido.")
         
         estudiante = {
             "nombre": nombre,
             "edad": edad,
             "carrera": carrera,
-            "promedio": promedio
+            "promedio": promedio,
+            "carnet": carnet 
         }
         base_de_datos.append(estudiante)
         print("\nEstudiante registrado con éxito!")
@@ -88,18 +107,16 @@ def imprimir_tabla(data, headers):
         print("No hay datos para mostrar.")
         return
 
-    print("*" * 60)  # Línea de separación superior
+    print("*" * 75)  # Línea de separación superior
     header_format = "{:<20}" * len(headers)  # Formato para los encabezados
     print(header_format.format(*headers))  # Imprimir encabezados
-    print("*" * 60)  # Línea de separación inferior
+    print("*" * 75)  # Línea de separación inferior
 
     for row in data:
         row_format = "{:<20}" * len(headers)  # Formato para las filas de datos
         print(row_format.format(*[row[header] for header in headers]))
 
-    print("*" * 60)  # Línea de separación final
-
-
+    print("*" * 75)  # Línea de separación final
 
 # Función para consultar estudiantes de una carrera
 
@@ -109,17 +126,19 @@ def consultar_estudiantes_carrera():
         estudiantes_carrera = list(filter(lambda estudiante: estudiante["carrera"] == carrera, base_de_datos))
         if len(estudiantes_carrera) == 0:
             print(f"No hay estudiantes registrados en la carrera {carrera}")
+
         else:
             print(f"Estudiantes en la carrera {carrera}:")
-            headers = ["Nombre", "Edad", "Promedio"]
+            headers = ["Nombre", "Edad", "Promedio", "Carnet"]
             data = []
 
             for estudiante in estudiantes_carrera:
                 nombre = estudiante['nombre']
                 edad = estudiante['edad']
                 promedio = estudiante['promedio']
-                data.append({"Nombre": nombre,"Edad": edad, "Promedio": promedio})
-
+                carnet = estudiante['carnet']
+                data.append({"Nombre": nombre,"Edad": edad, "Promedio": promedio, "Carnet": carnet})
+                
             imprimir_tabla(data, headers)  # Llamar a la función para imprimir la tabla
     except ValueError as e:
         print(f"Error: {e}")
@@ -148,7 +167,7 @@ def ver_estudiantes_destacados():
     estudiantes_ordenados = sorted(estudiantes_destacados, key=lambda estudiante: estudiante["promedio"], reverse=True)
     
     print("Estudiantes destacados (Promedio > 4.0):")
-    headers = ["Nombre", "Edad", "Carrera", "Promedio"]
+    headers = ["Nombre", "Edad", "Carrera", "Promedio", "Carnet"]
     data = []
 
     for estudiante in estudiantes_ordenados[:2]:
@@ -156,7 +175,8 @@ def ver_estudiantes_destacados():
         edad = estudiante ['edad']
         carrera = estudiante['carrera']
         promedio = estudiante['promedio']
-        data.append({"Nombre": nombre, "Edad": edad, "Carrera": carrera, "Promedio": promedio})
+        carnet = estudiante['carnet']
+        data.append({"Nombre": nombre, "Edad": edad, "Carrera": carrera, "Promedio": promedio, "Carnet": carnet})
 
     imprimir_tabla(data, headers)  # Llamar a la función para imprimir la tabla
     
@@ -170,14 +190,14 @@ def main():
         print("\nAún no hay estudiantes registrados.")
     
     while True:
-        print("\nMenú Principal:")
+        print("\nMenú Principal:\n")
         print("1. Registrar estudiante")
         print("2. Consultar estudiantes de una carrera")
         print("3. Calcular promedio general")
         print("4. Ver estudiantes destacados")
         print("5. Salir y guardar")
         print("6. Salir y reset")
-        opcion = input("Seleccione una opción (1-6): ")
+        opcion = input("\nSeleccione una opción (1-6): ")
         try:
             if opcion == "1":
                 registrar_estudiante()
