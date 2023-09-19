@@ -4,10 +4,10 @@ import pickle
 
 # Función para cargar la base de datos desde un archivo
 def cargar_base_de_datos():
-    try:
-        with open("estudiantes.pkl", "rb") as archivo:
+    try:                                       #El try, except es un condicional el cual se encarga de ser un metodo de "escape"
+        with open("estudiantes.pkl", "rb") as archivo:  
             return pickle.load(archivo)
-    except FileNotFoundError:
+    except FileNotFoundError:          #El bloque except se ejecutará cuando el bloque try falle debido a un error y retornara 
         return []
 
 # Función para guardar la base de datos 
