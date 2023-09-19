@@ -4,23 +4,23 @@ import pickle
 
 # Función para cargar la base de datos desde un archivo
 def cargar_base_de_datos():
-    try:
+    try:    # el try,except es un condicional el cualse encarga de ser un metodo de "escape"
         with open("estudiantes.pkl", "rb") as archivo:
             return pickle.load(archivo)
-    except FileNotFoundError:
+    except FileNotFoundError:   #el bloque except se ejecutara cuando el bloque try falle debido a un error y retornara
         return []
 
 # Función para guardar la base de datos 
 def guardar_base_de_datos(base_de_datos):
     try:
         with open("estudiantes.pkl", "wb") as archivo:
-            pickle.dump(base_de_datos, archivo)
+            pickle.dump(base_de_datos, archivo)  #pickle.dump() toma el objeto que desea serializar(base_de_datos) y un objeto de archivo(archivo) donde se guardará la información serializada
     except Exception as e:
         print(f"Error al guardar la base de datos: {e}")
         
 # Función para resetear la base de datos
 def resetear_base_de_datos():
-    base_de_datos.clear()
+    base_de_datos.clear()  #limpiara todo lo que se encuentre en "base_datos"
     guardar_base_de_datos(base_de_datos)
     print("\nBase de datos reseteada con éxito.")
 
@@ -36,7 +36,7 @@ def seleccionar_carrera():
     while True:
         try:
             opcion_carrera = int(input("Seleccione la carrera (1-4): ")) - 1
-            if 0 <= opcion_carrera < len(carreras):
+            if 0 <= opcion_carrera < len(carreras):  #verifica si "opcion_carrera" esta en el rango valido de mayor o igual a cero y menor que la longitud que "carreras"
                 return carreras[opcion_carrera]
             else:
                 print("Opción de carrera no válida")
@@ -50,9 +50,9 @@ def registrar_estudiante():
     try:
         nombre = input("Ingrese el nombre completo del estudiante: ")
         if not nombre.replace(" ", "").isalpha():
-            raise ValueError("El nombre debe contener solo letras y espacios.")
+            raise ValueError("El nombre debe contener solo letras y espacios.")  #es una clase de excepción que indica que se hay un error relacionado con el tipo o el valor de un objeto
         carnet = input("Ingrese el número de carnet del estudiante: ")
-        if not carnet.isdigit():
+        if not carnet.isdigit():  #identifica si la string tiene solo números (dígitos)
             raise ValueError("El número de carnet debe contener solo dígitos.")
         carrera = seleccionar_carrera()
         while True:
