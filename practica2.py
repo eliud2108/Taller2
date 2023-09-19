@@ -2,10 +2,10 @@ import pickle
 
 # Función para cargar la base de datos desde un archivo
 def cargar_base_de_datos():
-    try:
-        with open("estudiantes.pkl", "rb") as archivo:
+    try:                                       #El try, except es un condicional el cual se encarga de ser un metodo de "escape"
+        with open("estudiantes.pkl", "rb") as archivo:  
             return pickle.load(archivo)
-    except FileNotFoundError:
+    except FileNotFoundError:          #El bloque except se ejecutará cuando el bloque try falle debido a un error y retornara 
         return []
 
 # Función para guardar la base de datos 
@@ -38,7 +38,7 @@ def seleccionar_carrera():
     while True:
         try:
             opcion_carrera = int(input("Seleccione la carrera (1-4): ")) - 1
-            if 0 <= opcion_carrera < len(carreras):
+            if 0 <= opcion_carrera < len(carreras):  #verifica si el valor de "opcion_carrera" esta dentro del rango válido de opciones de la lista "carreras"
                 return carreras[opcion_carrera]
             else:
                 print("Opción de carrera no válida")
@@ -55,9 +55,9 @@ def registrar_estudiante():
         "carnet": None 
     }
     try:
-        nombre = input("\nIngrese el nombre del estudiante: ")
-        if not nombre.isalpha():
-           raise ValueError("El nombre debe contener solo letras.")
+        nombre = input("Ingrese el nombre del estudiante: ")
+        if not nombre.isalpha and nombre.isspace(): #Permite solo letras y espacios
+           raise ValueError("El nombre debe contener solo letras.") #se le avisa al usuario que lo digitado fue un error
         carrera = seleccionar_carrera()
         while True:
             try:
@@ -213,6 +213,7 @@ def main():
                 break
             elif opcion =="6":
                 resetear_base_de_datos()
+                break
             else:
                 raise ValueError("Opción no válida. Por favor, seleccione una opción válida (1-6).")
         except ValueError as e:
