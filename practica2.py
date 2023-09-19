@@ -11,10 +11,10 @@ def cargar_base_de_datos():
 # Función para guardar la base de datos 
 def guardar_base_de_datos(base_de_datos):
     try:
-        with open("estudiantes.pkl", "wb") as archivo:
-            pickle.dump(base_de_datos, archivo)
+        with open("estudiantes.pkl", "wb") as archivo: # Abre el archivo "estudiantes.pkl" en modo de escritura binaria ("wb")
+            pickle.dump(base_de_datos, archivo)  # Utiliza el módulo pickle para guardar la variable base_de_datos en el archivo
     except Exception as e:
-        print(f"Error al guardar la base de datos: {e}")
+        print(f"Error al guardar la base de datos: {e}")  # Captura cualquier excepción que pueda ocurrir y muestra un mensaje de error
         
 # Función para resetear la base de datos
 def resetear_base_de_datos():
