@@ -82,7 +82,7 @@ def registrar_estudiante():
             try:
                 carnet = int(input("Ingrese el número de carnet del estudiante: "))
                 carnet_no_existe = list(filter(lambda estudiante: estudiante["carnet"] == carnet, base_de_datos))
-                if (carnet > 0) and len(carnet_no_existe) == 0:
+                if (carnet > 0) and len(carnet_no_existe) == 0:  #verifica si ambas condiciones son verdaderas para asi terminar el bucle
                     break
                 else:
                     print("Número de carnet ya existente.")
