@@ -36,7 +36,7 @@ def seleccionar_carrera():
     while True:
         try:
             opcion_carrera = int(input("Seleccione la carrera (1-4): ")) - 1
-            if 0 <= opcion_carrera < len(carreras):
+            if 0 <= opcion_carrera < len(carreras):  #verifica si el valor de "opcion_carrera" esta dentro del rango válido de opciones de la lista "carreras"
                 return carreras[opcion_carrera]
             else:
                 print("Opción de carrera no válida")
@@ -50,7 +50,7 @@ def registrar_estudiante():
     try:
         nombre = input("Ingrese el nombre del estudiante: ")
         if not nombre.isalpha and nombre.isspace(): #Permite solo letras y espacios
-           raise ValueError("El nombre debe contener solo letras.")
+           raise ValueError("El nombre debe contener solo letras.") #se le avisa al usuario que lo digitado fue un error
         carrera = seleccionar_carrera()
         while True:
             try:
