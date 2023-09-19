@@ -1,11 +1,13 @@
 import pickle
 
+
+
 # Función para cargar la base de datos desde un archivo
 def cargar_base_de_datos():
-    try:                                       #El try, except es un condicional el cual se encarga de ser un metodo de "escape"
-        with open("estudiantes.pkl", "rb") as archivo:  
+    try:
+        with open("estudiantes.pkl", "rb") as archivo:
             return pickle.load(archivo)
-    except FileNotFoundError:          #El bloque except se ejecutará cuando el bloque try falle debido a un error y retornara 
+    except FileNotFoundError:
         return []
 
 # Función para guardar la base de datos 
@@ -28,44 +30,38 @@ base_de_datos = cargar_base_de_datos()
 # Función para seleccionar una carrera
 def seleccionar_carrera():
     print("\nSeleccione la carrera:")
-    carreras = ["Ingeniería en automatización y control", 
-                "Ingeniería de sistemas",
-                "Ingeniería industrial",
-                "Ingeniería mecánica\n"]
-    
+    carreras = ["Ingeniería en automatización y control", "Ingeniería de sistemas", "Ingeniería industrial", "Ingeniería mecánica"]
     for i, carrera in enumerate(carreras, 1):
         print(f"{i}. {carrera}")
     while True:
         try:
             opcion_carrera = int(input("Seleccione la carrera (1-4): ")) - 1
-            if 0 <= opcion_carrera < len(carreras):  #verifica si el valor de "opcion_carrera" esta dentro del rango válido de opciones de la lista "carreras"
+            if 0 <= opcion_carrera < len(carreras):
                 return carreras[opcion_carrera]
             else:
                 print("Opción de carrera no válida")
         except ValueError:
             print("Por favor, ingrese un valor numérico válido.")
 
+
+
 # Función para registrar un estudiante
 def registrar_estudiante():
-    estudiante = {
-        "nombre": None ,
-        "edad": None,
-        "carrera": None,
-        "promedio": None,
-        "carnet": None 
-    }
     try:
-        nombre = input("Ingrese el nombre del estudiante: ")
-        if not nombre.isalpha and nombre.isspace(): #Permite solo letras y espacios
-           raise ValueError("El nombre debe contener solo letras.") #se le avisa al usuario que lo digitado fue un error
+        nombre = input("Ingrese el nombre completo del estudiante: ")
+        if not nombre.replace(" ", "").isalpha():
+            raise ValueError("El nombre debe contener solo letras y espacios.")
+        carnet = input("Ingrese el número de carnet del estudiante: ")
+        if not carnet.isdigit():
+            raise ValueError("El número de carnet debe contener solo dígitos.")
         carrera = seleccionar_carrera()
         while True:
             try:
                 edad = int(input("Ingrese la edad del estudiante: "))
-                if 100 > edad > 0:
+                if edad >= 0:
                     break
                 else:
-                    print("Edad no valida.")
+                    print("La edad debe ser un valor positivo.")
             except ValueError:
                 print("Por favor, ingrese un valor numérico válido para la edad.")
         while True:
@@ -77,29 +73,20 @@ def registrar_estudiante():
                     print("El promedio debe estar en el rango de 0.0 a 5.0")
             except ValueError:
                 print("Por favor, ingrese un valor numérico válido.")
-                
-        while True:
-            try:
-                carnet = int(input("Ingrese el número de carnet del estudiante: "))
-                carnet_no_existe = list(filter(lambda estudiante: estudiante["carnet"] == carnet, base_de_datos))
-                if (carnet > 0) and len(carnet_no_existe) == 0:
-                    break
-                else:
-                    print("Número de carnet ya existente.")
-            except ValueError:
-                print("Por favor, ingrese un valor numérico válido.")
-        
+
         estudiante = {
             "nombre": nombre,
+            "carnet": carnet,
             "edad": edad,
             "carrera": carrera,
-            "promedio": promedio,
-            "carnet": carnet 
+            "promedio": promedio
         }
         base_de_datos.append(estudiante)
         print("\nEstudiante registrado con éxito!")
     except ValueError as e:
         print(f"Error: {e}")
+
+
         
 # Función para imprimir una tabla ordenada
 def imprimir_tabla(data, headers):
@@ -107,16 +94,18 @@ def imprimir_tabla(data, headers):
         print("No hay datos para mostrar.")
         return
 
-    print("*" * 75)  # Línea de separación superior
+    print("*" * 100)  # Línea de separación superior
     header_format = "{:<20}" * len(headers)  # Formato para los encabezados
     print(header_format.format(*headers))  # Imprimir encabezados
-    print("*" * 75)  # Línea de separación inferior
+    print("*" * 100)  # Línea de separación inferior
 
     for row in data:
         row_format = "{:<20}" * len(headers)  # Formato para las filas de datos
         print(row_format.format(*[row[header] for header in headers]))
 
-    print("*" * 75)  # Línea de separación final
+    print("*" * 100)  # Línea de separación final
+
+
 
 # Función para consultar estudiantes de una carrera
 
@@ -126,7 +115,6 @@ def consultar_estudiantes_carrera():
         estudiantes_carrera = list(filter(lambda estudiante: estudiante["carrera"] == carrera, base_de_datos))
         if len(estudiantes_carrera) == 0:
             print(f"No hay estudiantes registrados en la carrera {carrera}")
-
         else:
             print(f"Estudiantes en la carrera {carrera}:")
             headers = ["Nombre", "Edad", "Promedio", "Carnet"]
@@ -137,8 +125,31 @@ def consultar_estudiantes_carrera():
                 edad = estudiante['edad']
                 promedio = estudiante['promedio']
                 carnet = estudiante['carnet']
-                data.append({"Nombre": nombre,"Edad": edad, "Promedio": promedio, "Carnet": carnet})
-                
+                data.append({"Nombre": nombre, "Edad": edad, "Promedio": promedio, "Carnet": carnet})
+
+            imprimir_tabla(data, headers)  # Llamar a la función para imprimir la tabla
+    except ValueError as e:
+        print(f"Error: {e}")
+
+def consultar_estudiantes_por_carnet():
+    try:
+        carnet_buscado = input("Ingrese el número de carnet a buscar: ")
+        estudiantes_encontrados = [estudiante for estudiante in base_de_datos if estudiante["carnet"] == carnet_buscado]
+        if not estudiantes_encontrados:
+            print(f"No se encontraron estudiantes con el número de carnet {carnet_buscado}.")
+        else:
+            print(f"Estudiantes con el número de carnet {carnet_buscado}:")
+            headers = ["Nombre", "Edad", "Carrera", "Promedio", "Carnet"]
+            data = []
+
+            for estudiante in estudiantes_encontrados:
+                nombre = estudiante['nombre']
+                edad = estudiante['edad']
+                carrera = estudiante['carrera']
+                promedio = estudiante['promedio']
+                carnet = estudiante['carnet']
+                data.append({"Nombre": nombre, "Edad": edad, "Carrera": carrera, "Promedio": promedio, "Carnet": carnet})
+
             imprimir_tabla(data, headers)  # Llamar a la función para imprimir la tabla
     except ValueError as e:
         print(f"Error: {e}")
@@ -152,7 +163,7 @@ def calcular_promedio_general():
     promedio_general = sum(promedios) / len(base_de_datos)
     print(f"El promedio general de todos los estudiantes es: {promedio_general:.2f}")
 
-# Función para ver los estudiantes destacados  (promedio > 4.0)
+# Función para ver los estudiantes destacados (con los dos mayores promedios)
 def ver_estudiantes_destacados():
     if not base_de_datos:
         print("No hay estudiantes registrados.")
@@ -179,6 +190,7 @@ def ver_estudiantes_destacados():
         data.append({"Nombre": nombre, "Edad": edad, "Carrera": carrera, "Promedio": promedio, "Carnet": carnet})
 
     imprimir_tabla(data, headers)  # Llamar a la función para imprimir la tabla
+
     
 # Función principal
 def main():
@@ -190,14 +202,15 @@ def main():
         print("\nAún no hay estudiantes registrados.")
     
     while True:
-        print("\nMenú Principal:\n")
+        print("\nMenú Principal:")
         print("1. Registrar estudiante")
         print("2. Consultar estudiantes de una carrera")
         print("3. Calcular promedio general")
         print("4. Ver estudiantes destacados")
-        print("5. Salir y guardar")
-        print("6. Salir y reset")
-        opcion = input("\nSeleccione una opción (1-6): ")
+        print("5. Consultar estudiantes por número de carnet")  
+        print("6. Salir y guardar")
+        print("7. Salir y reset")
+        opcion = input("Seleccione una opción (1-7): ")
         try:
             if opcion == "1":
                 registrar_estudiante()
@@ -208,14 +221,15 @@ def main():
             elif opcion == "4":
                 ver_estudiantes_destacados()
             elif opcion == "5":
+                consultar_estudiantes_por_carnet()  
+            elif opcion == "6":
                 guardar_base_de_datos(base_de_datos)
                 print("Base de datos guardada en 'estudiantes.pkl'. ¡Adiós!")
                 break
-            elif opcion =="6":
+            elif opcion == "7":
                 resetear_base_de_datos()
-                break
             else:
-                raise ValueError("Opción no válida. Por favor, seleccione una opción válida (1-6).")
+                raise ValueError("Opción no válida. Por favor, seleccione una opción válida (1-7).")
         except ValueError as e:
             print(f"Error: {e}")
 
