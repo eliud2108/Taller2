@@ -1,3 +1,11 @@
+# =============================================================================
+# Taller 2 ---> Programación Avanzada
+# Equipo: 
+#     - Alberth Londoño Rodriguez
+#     - Grachi Pulgarin Gonzalez
+#     - Esteban Vásquez Cano
+# =============================================================================
+
 import pickle
 
 #%% Función para cargar la base de datos desde un archivo
